@@ -1,6 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import random
+import matplotlib.pyplot as plt
+
 
 test_fr = open('..\LogisticRegression\IrisTestML.dt')
 train_fr = open('..\LogisticRegression\IrisTrainML.dt')
