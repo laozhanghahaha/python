@@ -1,0 +1,65 @@
+import numpy as np
+import matplotlib.pylab as plt
+
+DanWood = open('..\LinerRegression\DanWood.dt','r')
+
+def createdataset():
+    tempMat = []
+    energyMat = []
+    for line in DanWood.readlines():
+        temp = line.strip().split()
+        tempMat.append([float(temp[0]),1])
+        energyMat.append(float(temp[1]))
+    return np.mat(tempMat), np.mat(energyMat).T
+
+def variance(x,y):
+    sumy = 0
+    for i in range (len(y)):
+        sumy += y[i]
+    average = sumy/len(y)
+    variance = 0
+    for i in range(len(y)):
+        variance += (y[i]-average)**2
+    return variance/len(y)
+
+def mse(x,y):
+    w = train_wb(x,y)
+    mse = 0
+    for i in range (len(y)):
+        mse += (y[i]-w.T*x[i].T)**2
+    return mse/len(y)
+
+def train_wb(x,y):
+    xTx = x.T * x
+    if np.linalg.det(xTx) == 0.0:
+        print('This matrix is singular, cannot do inverse')
+        return
+    w = xTx.I * (x.T * y)
+    return w
+
+def draw(x,y):
+    w = train_wb(x,y)
+    x = x[:, 0]
+    a = np.arange(1, 2, 0.1)
+    b = float(w[1]) + float(w[0]) * a
+    plt.plot(x, y, '.')
+    plt.plot(a, b)
+    plt.xlabel("absolute temperature")
+    plt.ylabel("radiated energy")
+    plt.title(" Plot of the data and the regression line")
+    plt.show()
+
+def drawAndvarAndmse():
+    x, y = createdataset()
+    w = train_wb(x,y)
+    var = variance(x,y)
+    m = mse(x,y)
+    print("mean-squared error", m)
+    print("variance of y values",var)
+    print("parameters of the regression model",w)
+    print("quotient", m/var)
+    draw(x, y)
+
+if __name__=='__main__':
+    drawAndvarAndmse()
+
